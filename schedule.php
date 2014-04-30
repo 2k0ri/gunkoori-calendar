@@ -68,16 +68,16 @@ mysqli_close($db);
 
 //新規登録のとき
 if (!isset($schedule_id)) {
-    $year = $_GET['year'];
-    $month = $_GET['month'];
-    $day = $_GET['day'];
+    $year = $start_year = $_GET['year'];
+    $month = $start_month = $_GET['month'];
+    $day = $start_day = $_GET['day'];
     $end_year = $year;
     $end_month = $month;
     $end_day = $day;
 } else {//編集のとき
-    $year = $schedule_year;
-    $month = $schedule_month;
-    $day = $schedule_day;
+    $year = $start_year = $schedule_year;
+    $month = $start_month = $schedule_month;
+    $day = $start_day = $schedule_day;
     $end_year = $end_schedule_year;
     $end_month = $end_schedule_month;
     $end_day = $end_schedule_day;
@@ -88,7 +88,6 @@ setcookie('error_month', $month, time()+10);
 setcookie('error_day', $day, time()+10);
 setcookie('error_id', $schedule_id, time()+10);
 
-
 /*
 *コンボボックス
 */
@@ -96,8 +95,12 @@ for ($i=-12; $i<=12; $i++) {
     list($years, $months, $days) = explode('-', date('Y-n-t', mktime(0, 0, 0, $month+($i), 1, intval($year)) ));
     $ym[] = $years.'年'.$months.'月';
     // $d[] = $days;
-    $combo[$years][$months]=$days;
-
+    // $combo[$years][$months]=$days;
+    $combo[$i] = array(
+        'year' => $years,
+        'month' => $months,
+        'days' => $days
+    );
     for ($j=1; $j<=$days; $j++) {
             $combos[$years][$months] = $j;
     }
@@ -118,36 +121,36 @@ for ($i=-12; $i<=12; $i++) {
 <form method="post" action="index.php">
 
 <table>
+
+    <?php foreach (array('start' => '開始', 'end' => '終了') as $key => $value): ?>
+
+<?php
+echo '$'.$key.'_year: '.${$key.'_year'}.'<br />';
+?>
+
     <tr>
-        <th>開始</th>
+        <th><?php echo $value ?></th>
         <td>
-            <select name="start_ym">
-            <?php for ($i=0; $i<=24; $i++):?>
-                <option id="select_year_month" value="<?php echo $year.'-'.$month;?>"><?php echo $ym[$i]?></option>
+            <select name="<?php echo $key ?>_ym">
+            <?php for ($i=0; $i<=24; $i++):
+            $_year = $combo[$i-12]['year'];
+            $_month = sprintf('%02d', $combo[$i-12]['month']);
+
+var_dump($_year == ${$key.'_year'} && $_month == ${$key.'_month'});
+var_dump($_year, ${$key.'_year'}, $_month, ${$key.'_month'});
+
+            ?>
+                <option id="select_year_month" value="<?php echo $_year.'-'.$_month;?>"<?php echo ($_year == ${$key.'_year'} && $_month == ${$key.'_month'}) ? ' selected="selected"' : '' ?>><?php echo $ym[$i]?></option>
             <?php endfor; ?>
             </select>
-            <input type="text" id="start_day" name="start_day" value="<?php echo $day;?>" />日<br />
-            <?php echo $error_ymd;?><br />
-            <input type="text" id="start_hour" name="start_hour" value="<?php echo date('G');?>" />時
-            <input type="text" id="start_min" name="start_min" value="<?php echo date('i');?>" />分
+            <input type="text" id="<?php echo $key ?>_day" name="<?php echo $key ?>_day" value="<?php echo $day;?>" maxlength="2" />日<br />
+            <?php if(!empty($error_ymd)) echo $error_ymd.'<br />'; ?>
+            <input type="text" id="<?php echo $key ?>_hour" name="<?php echo $key ?>_hour" value="<?php echo date('G');?>" maxlength="2" />時
+            <input type="text" id="<?php echo $key ?>_min" name="<?php echo $key ?>_min" value="<?php echo date('i');?>" maxlength="2" />分
             <br /><?php echo $error_hour;?>
         </td>
     </tr>
-    <tr>
-        <th>終了</th>
-        <td>
-            <select name="end_ym">
-            <?php for ($i=0; $i<=24; $i++):?>
-                <option id="select_year_month" value="<?php echo $end_year.'-'.$end_month;?>"><?php echo $ym[$i]?></option>
-            <?php endfor; ?>
-            </select>
-            <input type="text" id="end_day" name="end_day" value="<?php echo $end_day;?>" />日<br />
-            <?php echo $error_ymd;?><br />
-            <input type="text" id="end_hour" name="end_hour" value="<?php echo date('G');?>" />時
-            <input type="text" id="end_min" name="end_min" value="<?php echo date('i');?>" />分
-            <br /><?php echo $error_hour;?>
-        </td>
-    </tr>
+    <?php endforeach ?>
     <tr>
         <th>タイトル</th>
         <td>
