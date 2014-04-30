@@ -115,7 +115,7 @@ for ($i=-12; $i<=12; $i++) {
 <body>
 <h3>スケジュール登録</h3>
 <div id="schedule_form">
-<form method="post" action="http://kensyu.aucfan.com/">
+<form method="post" action="index.php">
 
 <table>
     <tr>
@@ -173,7 +173,7 @@ for ($i=-12; $i<=12; $i++) {
 
 </table>
 </form>
-<form method="post" action="http://kensyu.aucfan.com/">
+<form method="post" action="index.php">
     <input type="hidden" id="delete" name="delete" value="delete" />
     <input type="hidden"  name="schedule_id" value="<?php echo $schedule_id;?>" />
     <input type="submit" value="削除" />

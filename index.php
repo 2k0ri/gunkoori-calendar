@@ -21,7 +21,7 @@ $explode_ym = explode('-', $ym);//[0] => 2014 [1] => 04
 $year_of_ym = $explode_ym[0];//2014
 $month_of_ym = $explode_ym[1];//04
 if (checkdate($month_of_ym, 01, $year_of_ym) == false) {
-    header('Location: http://kensyu.aucfan.com/');
+    header('Location: index.php');
     exit;
 }
 
@@ -177,7 +177,7 @@ elseif ($schedule_detail == '') {
 if (isset($post_data['insert']) || isset($post_data['update'])) {
     if (empty($post_data['start_ym']) || empty($post_data['start_day']) || empty($post_data['start_hour']) || empty($post_data['start_min']) ||empty($post_data['end_ym']) || empty($post_data['end_day']) || empty($post_data['end_hour']) || empty($post_data['end_min']) || empty($schedule_title) || empty($schedule_detail)) {
         //setcookie('error', 'ここは必須項目です！');//フォームでエラー表示させるため
-        header("Location: http://kensyu.aucfan.com/error.php?year=".$error_year."&month=".$error_month."&day=".$error_day.$error_id);
+        header("Location: error.php?year=".$error_year."&month=".$error_month."&day=".$error_day.$error_id);
         exit;
     }
 }
@@ -359,7 +359,7 @@ mysqli_close($db);
                     <td class="<?php echo $class; ?>">
                         <!-- 日付出力 -->
                         <span class="day">
-                            <a href="http://kensyu.aucfan.com/schedule.php?year=<?php echo $cal_year;?>&month=<?php echo $cal_month;?>&day=<?php echo $day;?>"><?php echo $day;?></a>
+                            <a href="schedule.php?year=<?php echo $cal_year;?>&month=<?php echo $cal_month;?>&day=<?php echo $day;?>"><?php echo $day;?></a>
                         </span>
                         <!-- 祝日出力 -->
                         <span>
@@ -385,7 +385,7 @@ mysqli_close($db);
 
                             <?php if (isset($schedules[$cal_year][$cal_month][$day])):?>
                                 <?php foreach ($schedules[$cal_year][$cal_month][$day] as $schedule_id => $schedule):?>
-                                    <a href="http://kensyu.aucfan.com/schedule.php?year=<?php echo $cal_year;?>&month=<?php echo $cal_month;?>&day=<?php echo $day.'&id='.$schedule_id;?>"
+                                    <a href="schedule.php?year=<?php echo $cal_year;?>&month=<?php echo $cal_month;?>&day=<?php echo $day.'&id='.$schedule_id;?>"
                                     title="<?php echo $schedule['detail'];?>">
                                     <?php echo $schedule['title'];?><br />
                                 <?php endforeach;?>
